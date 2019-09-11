@@ -112,3 +112,10 @@ app.post('/signup', (req, res) => {
 });
 
 exports.api = functions.https.onRequest(app);
+
+//help function
+
+const isEmpty = string => {
+  if (string.trim() === '') return true;
+  else return false;
+};
