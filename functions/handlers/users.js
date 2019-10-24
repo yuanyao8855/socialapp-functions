@@ -1,8 +1,8 @@
 const { firedb } = require('../util/admin');
-const firebaseConfig = require('../util/config');
+
 
 const firebase = require('firebase');
-firebase.initializeApp(firebaseConfig);
+
 
 const { validateSignupData, validateLoginData } = require('../util/validators')
 
