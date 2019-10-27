@@ -1,7 +1,7 @@
 //help function
 
 const isEmpty = str => {
-  if (str.trim() === '') return true;
+  if (!str || str.trim() === '') return true;
   else return false;
 };
 
@@ -38,4 +38,15 @@ exports.validateLoginData = user => {
     errors,
     valid: Object.keys(errors).length === 0 ? true : false,
   };
+};
+
+// prevent update user bio, website and locaton with empty string
+exports.reduceUserDetail = data => {
+  let userDetails = {};
+  const { bio, website, location } = data;
+  if (!isEmpty(bio)) userDetails.bio = bio;
+  if (!isEmpty(website)) userDetails.website = website;
+  if (!isEmpty(location)) userDetails.location = location;
+
+  return userDetails;
 };

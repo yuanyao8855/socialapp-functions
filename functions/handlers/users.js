@@ -3,7 +3,11 @@ const config = require('../util/config');
 
 const firebase = require('firebase');
 
-const { validateSignupData, validateLoginData } = require('../util/validators');
+const {
+  validateSignupData,
+  validateLoginData,
+  reduceUserDetail,
+} = require('../util/validators');
 
 exports.signup = (req, res) => {
   const newUser = {
@@ -64,6 +68,7 @@ exports.login = (req, res) => {
     email: req.body.email,
     password: req.body.password,
   };
+
   const { valid, errors } = validateLoginData(user);
   if (!valid) res.status(400).json(errors);
 
@@ -137,4 +142,48 @@ exports.uploadImage = (req, res) => {
       });
   });
   busboy.end(req.rawBody);
+};
+
+//Add user profile detail
+exports.postUserDetail = (req, res) => {
+  let userDetails = reduceUserDetail(req.body);
+  console.log(userDetails);
+  firedb
+    .doc(`/users/${req.user.handle}`)
+    .update(userDetails)
+    .then(() => {
+      return res.status(200).json({ message: 'Details added successfully' });
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.getUserDetail = (req, res) => {
+  let userData = {};
+  firedb
+    .doc(`/users/${req.user.handle}`)
+    .get()
+    .then(doc => {
+      if (doc.exists) {
+        userData.details = doc.data();
+        console.log({ Credentials: userData.Credentials });
+        return firedb
+          .collection('likes')
+          .where('userHandle', '==', req.user.handle)
+          .get();
+      }
+    })
+    .then(data => {
+      userData.likes = [];
+      data.forEach(doc => {
+        userData.likes.push(doc.data());
+      });
+      return res.json(userData);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
 };
