@@ -152,7 +152,7 @@ exports.postUserDetail = (req, res) => {
     .doc(`/users/${req.user.handle}`)
     .update(userDetails)
     .then(() => {
-      return res.status(200).json({ message: 'Details added successfully' });
+      return res.json({ message: 'Details added successfully' });
     })
     .catch(err => {
       console.error(err);

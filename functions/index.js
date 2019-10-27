@@ -5,7 +5,12 @@ const firebaseConfig = require('./util/config');
 firebase.initializeApp(firebaseConfig);
 
 const app = require('express')();
-const { getAllScreams, postOneScream } = require('./handlers/screams');
+const {
+  getAllScreams,
+  postOneScream,
+  getScream,
+  commentOnScream,
+} = require('./handlers/screams');
 const {
   signup,
   login,
@@ -19,6 +24,8 @@ const { FBAuth } = require('./util/fbAuth');
 //screams routes
 app.get('/screams', getAllScreams);
 app.post('/screams', FBAuth, postOneScream);
+app.get('/screams/:screamId', getScream);
+app.post('/screams/:screamId/comment', FBAuth, commentOnScream);
 
 // users routes
 app.post('/signup', signup);
