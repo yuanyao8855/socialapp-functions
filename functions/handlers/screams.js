@@ -1,12 +1,12 @@
 const { firedb } = require('../util/admin');
 
 exports.getAllScreams = (req, res) => {
+  let screams = [];
   firedb
     .collection('screams')
     .orderBy('createdAt', 'desc')
     .get()
     .then(data => {
-      let screams = [];
       data.forEach(doc => {
         screams.push({
           screamId: doc.id,
